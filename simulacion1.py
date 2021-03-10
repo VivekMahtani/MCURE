@@ -34,11 +34,26 @@ G = sysg
 syslc = control.feedback(F*G)
 # La consigna es 3
 [t,ylc] = control.step_response(3*syslc)
+# plt.figure()
+# plt.plot(t,ylc)
+# plt.xlabel('Tiempo')
+# plt.ylabel('Salida')
+# plt.grid()
+# plt.show()
+
+############
+
+Kp = 2
+Ki = 1.5
+
+sysp = control.tf(Kp, 1)
+sysi = control.tf(Ki, [1,0])
+sysf = sysp + sysi
+syslc = control.feedback(sysp*sysi)
+
+[t, yi] = control.step_response(3*syslc)
 plt.figure()
-plt.plot(t,ylc)
-plt.xlabel('Tiempo')
-plt.ylabel('Salida')
+plt.plot(t, yi)
 plt.grid()
 plt.show()
-
 
