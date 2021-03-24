@@ -9,4 +9,3 @@ plt.figure(1)
 plt.plot(t,y)
 plt.grid()
 plt.show()
-
