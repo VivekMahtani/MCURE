@@ -27,7 +27,7 @@ plt.figure(1)
 plt.plot(t,y1)
 plt.grid()
 plt.show()
-# %% control.bode_plot(sysg1)
+
 
 
 

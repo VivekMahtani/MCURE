@@ -31,17 +31,63 @@ import matplotlib.pyplot as plt
 Kc = 4
 Ki = 1
 
-sysgp = control.tf(4, [500,2]) #Transfer function.
+### Transfer functions
+
+sysgp = control.tf(4, [500,2])
 sysgv = control.tf(2, [1,10,1])
 sysgt = control.tf(2,1)
 syspi = control.tf([Kc, Kc*Ki], [1,0])
 
-syslc = control.feedback(sysgp*sysgv*sysgt*syspi)
+syslc = control.feedback(sysgp*sysgv*sysgt,syspi)
 #t = np.arange(0,0.1,100)
 [t,y1] = control.step_response(syslc, 50)
 #El 4 es el valor de Yr
 
-plt.figure(1)
-plt.plot(t,y1)
-plt.grid()
-plt.show()
+# plt.figure(1)
+# plt.plot(t,y1)
+# plt.grid()
+# plt.show()
+
+
+def plot_figures(Kc, Ki=0.7):
+	sysgp = control.tf(4, [500,2])
+	sysgv = control.tf(2, [1,10,1])
+	sysgt = control.tf(2,1)
+	syspi_list = []
+	for Kc in Kc:
+		syspi = control.tf([Kc, Kc*Ki], [1,0])
+		syspi_list.append(syspi)
+	plt.figure(1)
+	for pi in syspi_list:
+		syslc = control.feedback(sysgp*sysgv*sysgt,pi)
+		t, y = control.step_response(syslc, 50)
+		plt.plot(t, y, label=f'syspi: {pi}')
+	plt.grid()
+	plt.legend()
+	plt.show()
+	return syspi_list
+
+plot_figures(Kc=[2,4,6,8,10])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
