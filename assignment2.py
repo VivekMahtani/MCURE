@@ -18,6 +18,30 @@ import matplotlib.pyplot as plt
 # Gt(s)=Tm(s)/T(s)=2  (sensor transfer function)
 
 # Gc(s)=U(s)/E(s)=kc*(1+ki/s) (PI controller transfer function)
+# (kc*s + kc*ki)/s
 
 
+# You have to write the Python script file to simulate this system and 
+# to perform several simulations to study the effect of each control 
+# action (P action and Integral action).
 
+# You have to upload the python script with the code of the program and a 
+# pdf file explaining the results obtained.
+
+Kc = 4
+Ki = 1
+
+sysgp = control.tf(4, [500,2]) #Transfer function.
+sysgv = control.tf(2, [1,10,1])
+sysgt = control.tf(2,1)
+syspi = control.tf([Kc, Kc*Ki], [1,0])
+
+syslc = control.feedback(sysgp*sysgv*sysgt*syspi)
+#t = np.arange(0,0.1,100)
+[t,y1] = control.step_response(syslc, 50)
+#El 4 es el valor de Yr
+
+plt.figure(1)
+plt.plot(t,y1)
+plt.grid()
+plt.show()
