@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 plt.style.use('seaborn')
 
-# In this assignment you have to simulate a closed-loop control system using Octave. 
+# In this assignment you have to simulate a closed-loop control system 
+# using Octave. 
 # The system to be controlled is the heat exchanger studied in class. 
 # The elements in the closed-loop are:
 
@@ -25,24 +26,31 @@ plt.style.use('seaborn')
 # You have to upload the python script with the code of the program and a 
 # pdf file explaining the results obtained.
 
-    # sysp = control.tf(4, [500, 2]) #proceso
-    # sysv = control.tf(2, [1,10,1]) #valvula = actuador
-    # syst = control.tf(2,1) #sensor
+Kc = np.linspace(1., 10., 4)
+Ki = 0.005
 
-def assignment(Kc=np.linspace(1., 10., 4), Ki=0.005):
+def assignment2(Kc=Kc, Ki=Ki):
+
+	# Defining the transfer functions
 	sysgp = control.tf(4, [500,2]) #Process
 	sysgv = control.tf(2, [1,10,1]) #Valve
-	sysgt = 2
+	sysgt = 2 # Sensor
 	syspi_list = []
+
+	# Loop to iterate among the different values of Kc
 	for i in Kc:
 		syspi = control.tf([i, i*Ki],[1,0])
 		syspi_list.append(syspi)
+
+	# Plotting the figures with the different values of Kc
 	plt.figure()
 	for i in range(len(syspi_list)):
+		#Defining the closed loop
 		syslc = control.feedback(syspi_list[i]*sysgv*sysgp,sysgt)
-		consig = 1/sysgt
+		consig = 1/sysgt # The setpoint is 0.5, because the sensor
+						# transfer function is equal to 2
 		t, y = control.step_response(syslc,200)
-		error = -(y - consig)
+		error = np.abs(y - consig) # The error while achieving the setpoint
 		plt.plot(t, y, label=f'Kc= {Kc[i]:.2f}')
 		# plt.plot(t, error, label=f'Error para Kc={Kc[i]:.2f}')
 		plt.title(f'Ki= {Ki:.4f}')
@@ -53,31 +61,19 @@ def assignment(Kc=np.linspace(1., 10., 4), Ki=0.005):
 	plt.show()
 	return syspi_list
 
-
-def plot_varying_Ki(Ki_list=np.linspace(0., 0.005, 10)):
+Ki_list = np.linspace(0., 0.005, 10)
+# Funtion for different values of Ki
+def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list):
 	for i in range(len(Ki_list)):
-		assignment(Ki=Ki_list[i])
+		assignment2(Kc=Kc, Ki=Ki_list[i])
 	pass
-
 
 plot_varying_Ki()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Kc = [.020]
+Ki_list = np.linspace(0.001, 20, 10)
+plot_varying_Ki(Kc=Kc, Ki_list=Ki_list)
 
 
 
