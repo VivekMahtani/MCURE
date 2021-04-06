@@ -21,10 +21,6 @@ print(pp)
 tau = 1/pp[0].real
 print(abs(tau))
 
-
-
-
-
 # Definir F, G, llamar feedback y luego step response.
 # Glc = Y/R = G1F/(1+G1F)
 

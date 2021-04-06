@@ -2,10 +2,7 @@ import numpy as np
 import control
 import matplotlib.pyplot as plt
 
-# sysgp = control.tf(10, [1,1,0])
-# sysga = control.tf(1,[1/10, 1])
-# sysgt = control.tf(1,1)
-
+plt.style.use('seaborn')
 
 # In this assignment you have to simulate a closed-loop control system using Octave. 
 # The system to be controlled is the heat exchanger studied in class. 
@@ -28,49 +25,42 @@ import matplotlib.pyplot as plt
 # You have to upload the python script with the code of the program and a 
 # pdf file explaining the results obtained.
 
-Kc = 4
-Ki = 1
+    # sysp = control.tf(4, [500, 2]) #proceso
+    # sysv = control.tf(2, [1,10,1]) #valvula = actuador
+    # syst = control.tf(2,1) #sensor
 
-### Transfer functions
-
-sysgp = control.tf(4, [500,2])
-sysgv = control.tf(2, [1,10,1])
-sysgt = control.tf(2,1)
-syspi = control.tf([Kc, Kc*Ki], [1,0])
-
-syslc = control.feedback(sysgp*sysgv*sysgt,syspi)
-#t = np.arange(0,0.1,100)
-[t,y1] = control.step_response(syslc, 50)
-#El 4 es el valor de Yr
-
-# plt.figure(1)
-# plt.plot(t,y1)
-# plt.grid()
-# plt.show()
-
-
-def plot_figures(Kc, Ki=0.7):
-	sysgp = control.tf(4, [500,2])
-	sysgv = control.tf(2, [1,10,1])
-	sysgt = control.tf(2,1)
+def assignment(Kc=np.linspace(1., 10., 4), Ki=0.005):
+	sysgp = control.tf(4, [500,2]) #Process
+	sysgv = control.tf(2, [1,10,1]) #Valve
+	sysgt = 2
 	syspi_list = []
-	for Kc in Kc:
-		syspi = control.tf([Kc, Kc*Ki], [1,0])
+	for i in Kc:
+		syspi = control.tf([i, i*Ki],[1,0])
 		syspi_list.append(syspi)
-	plt.figure(1)
-	for pi in syspi_list:
-		syslc = control.feedback(sysgp*sysgv*sysgt,pi)
-		t, y = control.step_response(syslc, 50)
-		plt.plot(t, y, label=f'syspi: {pi}')
-	plt.grid()
+	plt.figure()
+	for i in range(len(syspi_list)):
+		syslc = control.feedback(syspi_list[i]*sysgv*sysgp,sysgt)
+		consig = 1/sysgt
+		t, y = control.step_response(syslc,200)
+		error = -(y - consig)
+		plt.plot(t, y, label=f'Kc= {Kc[i]:.2f}')
+		# plt.plot(t, error, label=f'Error para Kc={Kc[i]:.2f}')
+		plt.title(f'Ki= {Ki:.4f}')
+	
 	plt.legend()
+	plt.xlabel('Time (s)')
+	plt.ylabel('Value')
 	plt.show()
 	return syspi_list
 
-plot_figures(Kc=[2,4,6,8,10])
+
+def plot_varying_Ki(Ki_list=np.linspace(0., 0.005, 10)):
+	for i in range(len(Ki_list)):
+		assignment(Ki=Ki_list[i])
+	pass
 
 
-
+plot_varying_Ki()
 
 
 
