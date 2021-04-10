@@ -26,17 +26,17 @@ plt.style.use('seaborn')
 # You have to upload the python script with the code of the program and a 
 # pdf file explaining the results obtained.
 
-Kc = np.linspace(1., 10., 4)
+Kc = np.linspace(1, 5., 4)
 Ki = 0.005
 
-def assignment2(Kc=Kc, Ki=Ki):
+def assignment2(Kc=Kc, Ki=Ki): #Kc has to be a list; Ki has to be a float
 
 	# Defining the transfer functions
 	sysgp = control.tf(4, [500,2]) #Process
 	sysgv = control.tf(2, [1,10,1]) #Valve
 	sysgt = 2 # Sensor
-	syspi_list = []
 
+	syspi_list = []
 	# Loop to iterate among the different values of Kc
 	for i in Kc:
 		syspi = control.tf([i, i*Ki],[1,0])
@@ -61,9 +61,11 @@ def assignment2(Kc=Kc, Ki=Ki):
 	plt.show()
 	return syspi_list
 
+assignment2()
+
 Ki_list = np.linspace(0., 0.005, 10)
 # Funtion for different values of Ki
-def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list):
+def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list): #Now Kc AND Ki are lists.
 	for i in range(len(Ki_list)):
 		assignment2(Kc=Kc, Ki=Ki_list[i])
 	pass
@@ -71,8 +73,8 @@ def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list):
 plot_varying_Ki()
 
 
-Kc = [.020]
-Ki_list = np.linspace(0.001, 20, 10)
+Kc = [2]
+Ki_list = np.linspace(0.001, .20, 10)
 plot_varying_Ki(Kc=Kc, Ki_list=Ki_list)
 
 
