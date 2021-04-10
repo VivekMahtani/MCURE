@@ -34,7 +34,7 @@ def assignment2(Kc=Kc, Ki=Ki): #Kc has to be a list; Ki has to be a float
 	# Defining the transfer functions
 	sysgp = control.tf(4, [500,2]) #Process
 	sysgv = control.tf(2, [1,10,1]) #Valve
-	sysgt = 2 # Sensor
+	sysgt = control.tf(2,1) # Sensor
 
 	syspi_list = []
 	# Loop to iterate among the different values of Kc
@@ -47,7 +47,7 @@ def assignment2(Kc=Kc, Ki=Ki): #Kc has to be a list; Ki has to be a float
 	for i in range(len(syspi_list)):
 		#Defining the closed loop
 		syslc = control.feedback(syspi_list[i]*sysgv*sysgp,sysgt)
-		consig = 1/sysgt # The setpoint is 0.5, because the sensor
+		consig = 1/2 # The setpoint is 0.5, because the sensor
 						# transfer function is equal to 2
 		t, y = control.step_response(syslc,200)
 		error = np.abs(y - consig) # The error while achieving the setpoint
@@ -61,10 +61,11 @@ def assignment2(Kc=Kc, Ki=Ki): #Kc has to be a list; Ki has to be a float
 	plt.show()
 	return syspi_list
 
-assignment2()
+#assignment2()
 
 Ki_list = np.linspace(0., 0.005, 10)
 # Funtion for different values of Ki
+Kc = [2.]
 def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list): #Now Kc AND Ki are lists.
 	for i in range(len(Ki_list)):
 		assignment2(Kc=Kc, Ki=Ki_list[i])
@@ -73,9 +74,9 @@ def plot_varying_Ki(Kc=Kc, Ki_list=Ki_list): #Now Kc AND Ki are lists.
 plot_varying_Ki()
 
 
-Kc = [2]
-Ki_list = np.linspace(0.001, .20, 10)
-plot_varying_Ki(Kc=Kc, Ki_list=Ki_list)
+# Kc = [2]
+# Ki_list = np.linspace(0.001, .20, 10)
+# plot_varying_Ki(Kc=Kc, Ki_list=Ki_list)
 
 
 
